@@ -8,7 +8,7 @@ namespace IncrFileNum
 {
     internal class StateView
     {
-        public List<FileSummary> List { get; set; }
+        public List<FileSummary> SummaryList { get; set; }
         public int Position { get; set; }
         public int Increase { get; set; }
 
@@ -21,7 +21,7 @@ namespace IncrFileNum
             {
                 if (_rowDigit < 0)
                 {
-                    _rowDigit = List.Count.ToString().Length;
+                    _rowDigit = SummaryList.Count.ToString().Length;
                 }
                 return _rowDigit;
             }
@@ -34,7 +34,7 @@ namespace IncrFileNum
             {
                 if (_maxPosition < 0)
                 {
-                    _maxPosition = List.Max(x => x.Numbers.Length) - 1;
+                    _maxPosition = SummaryList.Max(x => x.Numbers.Length) - 1;
                 }
                 return _maxPosition;
             }
@@ -45,9 +45,9 @@ namespace IncrFileNum
             Console.WriteLine(new string('=', Console.WindowWidth - 1));
             Console.WriteLine();
             Console.WriteLine($"  [Position: {Position + 1}] [Increase: {Increase}]");
-            Console.WriteLine("    ←: Position to left  ⇒: Position to right");
-            Console.WriteLine("    ↑: Increase          ↓: Decrease");
-            Console.WriteLine("    Esc: Process end      Enter: Rename start");
+            Console.WriteLine("    ←: Position to left.  ⇒: Position to right.");
+            Console.WriteLine("    ↑: Increase.          ↓: Decrease.");
+            Console.WriteLine("    Esc: Process end.      Enter: Rename start.");
         }
     }
 }

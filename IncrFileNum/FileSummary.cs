@@ -26,6 +26,16 @@ namespace IncrFileNum
         public FileNameNumber[] Numbers { get; set; }
 
         /// <summary>
+        /// コンソール表示上の行番号
+        /// </summary>
+        public int Row { get; set; }
+
+        /// <summary>
+        /// 出力した文字数
+        /// </summary>
+        public int OutputLength { get; set; }
+
+        /// <summary>
         /// ファイル名に数字が含まれていたらtrue
         /// </summary>
         public bool Enabled { get; set; }
@@ -41,47 +51,60 @@ namespace IncrFileNum
             }
         }
 
-        //  [課題]position指定する際に、格納しているNumber配列より大きい数が指定した場合の処理
-        //        同フォルダー内に、数字出現箇所数が違うファイルが混在した場合の対策が必要
-        public void WriteLine(StateView state, int row)
+        public void WriteLine(StateView state)
         {
-            int position = state.Position >= Numbers.Length ? Numbers.Length - 1 : state.Position;
+            if (state.Position < Numbers.Length)
+            {
+                var num = Numbers[state.Position];
+                var nextNum = num.Number + state.Increase;
+                string nextNumText = nextNum < 0 ?
+                    "-" + nextNum.ToString().Substring(1).PadLeft(num.Length - 1, '0') :
+                    nextNum.ToString().PadLeft(num.Length, '0');
 
-            var num = Numbers[position];
-            var nextNum = num.Number + state.Increase;
-            string nextNumText = nextNum < 0 ?
-                "-" + nextNum.ToString().Substring(1).PadLeft(num.Length - 1, '0') :
-                nextNum.ToString().PadLeft(num.Length, '0');
+                Console.Write(string.Format(" {0} [{1}/{2}] ({3}->{4}) | ",
+                    Row.ToString().PadLeft(state.RowDigit, ' '),
+                    state.Position + 1,
+                    Numbers.Length,
+                    num.Number.ToString().PadLeft(num.Length, '0'),
+                    nextNumText));
 
-            Console.Write(string.Format(" {0} [{1}/{2}] ({3}->{4}) | ",
-                row.ToString().PadLeft(state.RowDigit, ' '),
-                position + 1,
-                Numbers.Length,
-                num.Number.ToString().PadLeft(num.Length, '0'),
-                nextNumText));
+                Console.Write(Name.Substring(0, num.Index));
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write(Name.Substring(num.Index, num.Length));
+                Console.ResetColor();
+                Console.Write(Name.Substring(num.Index + num.Length));
 
-            Console.Write(Name.Substring(0, num.Index));
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write(Name.Substring(num.Index, num.Length));
-            Console.ResetColor();
-            Console.WriteLine(Name.Substring(num.Index + num.Length));
+                this.OutputLength = Console.CursorLeft;
+                Console.WriteLine();
+            }
+            else
+            {
+                Console.Write(string.Format(" {0} [-/{1}] () | {2}",
+                    Row.ToString().PadLeft(state.RowDigit, ' '),
+                    Numbers.Length,
+                    Name));
+                this.OutputLength = Console.CursorLeft;
+                Console.WriteLine();
+            }
         }
 
-        //  [課題]position指定する際に、格納しているNumber配列より大きい数が指定した場合の処理
-        //        同フォルダー内に、数字出現箇所数が違うファイルが混在した場合の対策が必要
         public string GetNewName(int position, int increase)
         {
-            var num = Numbers[position];
-            var nextNum = num.Number + increase;
-            string nextnumText = nextNum < 0 ?
-                "-" + nextNum.ToString().Substring(1).PadLeft(num.Length - 1, '0') :
-                nextNum.ToString().PadLeft(num.Length, '0');
+            if (increase != 0 && position < Numbers.Length)
+            {
+                var num = Numbers[position];
+                var nextNum = num.Number + increase;
+                string nextnumText = nextNum < 0 ?
+                    "-" + nextNum.ToString().Substring(1).PadLeft(num.Length - 1, '0') :
+                    nextNum.ToString().PadLeft(num.Length, '0');
 
-            StringBuilder sb = new();
-            sb.Append(Name.Substring(0, num.Index));
-            sb.Append(nextnumText);
-            sb.Append(Name.Substring(num.Index + num.Length));
-            return sb.ToString();
+                StringBuilder sb = new();
+                sb.Append(Name.Substring(0, num.Index));
+                sb.Append(nextnumText);
+                sb.Append(Name.Substring(num.Index + num.Length));
+                return sb.ToString();
+            }
+            return null;
         }
     }
 }

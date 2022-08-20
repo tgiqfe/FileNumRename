@@ -8,15 +8,16 @@ namespace IncrFileNum
     {
         public static void Main(string[] args)
         {
-            if (true)
             if (args.Length > 0 && Directory.Exists(args[0]))
             {
+                int row = 1;
                 List<FileSummary> list = new();
                 Directory.GetFiles(args[0]).ToList().ForEach(x =>
                 {
                     var summary = new FileSummary(x);
                     if (summary.Enabled)
                     {
+                        summary.Row = row++;
                         list.Add(summary);
                     }
                 });
@@ -24,7 +25,7 @@ namespace IncrFileNum
                 var cursorPos = Console.GetCursorPosition();
                 StateView state = new()
                 {
-                    List = list,
+                    SummaryList = list,
                     //StartCursorLeft = Console.CursorLeft,
                     StartCursorTop = Console.CursorTop,
                 };
@@ -34,10 +35,10 @@ namespace IncrFileNum
                 {
                     Console.WriteLine(new string('=', Console.WindowWidth - 1));
 
-                    int row = 0;
+                    //int row = 0;
                     foreach (var summary in list)
                     {
-                        summary.WriteLine(state, row++);
+                        summary.WriteLine(state);
                     }
                     state.WriteLine();
 
@@ -92,8 +93,8 @@ namespace IncrFileNum
             //  コンソール上にすでに出力済みの内容を消す
             int lastCursorTop = Console.CursorTop;
             Console.SetCursorPosition(0, state.StartCursorTop);
-            string spaceRow = new string(' ', Console.WindowWidth -1);
-            for(int i = state.StartCursorTop; i < lastCursorTop; i++)
+            string spaceRow = new string(' ', Console.WindowWidth - 1);
+            for (int i = state.StartCursorTop; i < lastCursorTop; i++)
             {
                 Console.WriteLine(spaceRow);
             }
@@ -104,22 +105,59 @@ namespace IncrFileNum
 
         private static void Increase(StateView state)
         {
-            try
-            {
-                if (state.Increase == 0) { return; }
-                if (state.Increase > 0) { state.List.Reverse(); }
+            if (state.Increase > 0) { state.SummaryList.Reverse(); }
 
-                for (int i = 0; i < state.List.Count; i++)
+            int resultPosLeft = state.SummaryList.Max(x => x.OutputLength) + 1;
+            if (resultPosLeft > Console.WindowWidth - 9)
+            {
+                resultPosLeft = Console.WindowWidth - 9;
+            }
+            int lastCursorTop = Console.CursorTop;
+
+            for (int i = 0; i < state.SummaryList.Count; i++)
+            {
+                string newName = state.SummaryList[i].GetNewName(state.Position, state.Increase);
+                if (newName == null)
                 {
-                    string newName = state.List[i].GetNewName(state.Position, state.Increase);
-                    FileSystem.RenameFile(state.List[i].Path, newName);
+                    Console.SetCursorPosition(
+                        resultPosLeft,
+                        state.StartCursorTop + state.SummaryList[i].Row);
+                    Console.Write("[Skip]");
+                }
+                if (newName != null)
+                {
+                    try
+                    {
+                        FileSystem.RenameFile(state.SummaryList[i].Path, newName);
+                        Console.SetCursorPosition(
+                            resultPosLeft,
+                            state.StartCursorTop + state.SummaryList[i].Row);
+                        Console.Write("[");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write("Success");
+                        Console.ResetColor();
+                        Console.Write("]");
+                    }
+                    catch (Exception e)
+                    {
+                        Console.SetCursorPosition(
+                            resultPosLeft,
+                            state.StartCursorTop + state.SummaryList[i].Row);
+                        Console.Write("[");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("Failed");
+                        Console.ResetColor();
+                        Console.Write("]");
+
+                        Console.SetCursorPosition(0, lastCursorTop);
+                        Console.WriteLine();
+                        Console.WriteLine(e);
+                        return;
+                    }
                 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            //  Increase == 0の場合は何もしない
+
+            Console.SetCursorPosition(0, lastCursorTop);
         }
     }
 }
