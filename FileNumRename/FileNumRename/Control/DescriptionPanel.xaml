@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="FileNumRename.Control.DescriptionPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FileNumRename.Control"
+             xmlns:fa="http://schemas.fontawesome.com/icons/fonts"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Noto Sans JP" />
+            <Setter Property="FontSize" Value="14px" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Padding" Value="0 3" />
+        </Style>
+        <Style TargetType="fa:FontAwesome">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <Style TargetType="Border">
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="BorderThickness" Value="1.5" />
+            <Setter Property="BorderBrush" Value="Black" />
+        </Style>
+    </UserControl.Resources>
+
+    <StackPanel Margin="15 5">
+        <!-- cursor/increase -->
+        <StackPanel Orientation="Horizontal" >
+            <TextBlock Text="[ Cursor: " />
+            <TextBlock Text="1" />
+            <TextBlock Text=" ] [ Increase: " />
+            <TextBlock Text="1" />
+            <TextBlock Text=" ]" />
+        </StackPanel>
+
+        <Grid Margin="20 0">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            
+            <!-- 1行目 -->
+            <fa:FontAwesome Grid.Row="0" Grid.Column="0"
+                            Margin="3 0"
+                            Icon="Solid_LeftLong" />
+            <TextBlock Grid.Row="0" Grid.Column="1"
+                       Margin="3 0"
+                       Text="Move cursor to Left." />
+            <fa:FontAwesome Grid.Row="0" Grid.Column="2"
+                            Margin="3 0"
+                            Icon="Solid_RightLong" />
+            <TextBlock Grid.Row="0" Grid.Column="3"
+                       Margin="3 0"
+                       Text="Move cursor to Right." />
+
+            <!-- 2行目 -->
+            <fa:FontAwesome Grid.Row="1" Grid.Column="0"
+                            Icon="Solid_UpLong" />
+            <TextBlock Grid.Row="1" Grid.Column="1"
+                       Margin="3 0"
+                       Text="Increase." />
+            <fa:FontAwesome Grid.Row="1" Grid.Column="2"
+                            Icon="Solid_DownLong" />
+            <TextBlock Grid.Row="1" Grid.Column="3"
+                       Margin="3 0"
+                       Text="Decrease." />
+
+            <!-- 3行目 -->
+            <Border Grid.Row="2" Grid.Column="0">
+                <TextBlock Text="Esc" 
+                           FontSize="10"
+                           Padding="3 0" />
+            </Border>
+            <TextBlock Grid.Row="2" Grid.Column="1"
+                       Margin="3 0"
+                       Text="Process End." />
+            <Border Grid.Row="2" Grid.Column="2">
+                <TextBlock Text="Enter" 
+                           FontSize="10"
+                           Padding="3 0" />
+            </Border>
+            <TextBlock Grid.Row="2" Grid.Column="3"
+                       Margin="3 0"
+                       Text="Rename start." />
+        </Grid>
+    </StackPanel>
+</UserControl>
