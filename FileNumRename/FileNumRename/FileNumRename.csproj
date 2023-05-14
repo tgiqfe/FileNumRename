@@ -3,13 +3,8 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Lib\" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FontAwesome6.Fonts" Version="2.5.1" />

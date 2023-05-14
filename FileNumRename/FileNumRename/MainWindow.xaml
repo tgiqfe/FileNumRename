@@ -10,6 +10,25 @@
         PreviewKeyDown="Window_PreviewKeyDown"
         PreviewMouseDown="Window_PreviewMouseDown"
         Title="FileNumRename" Height="480" Width="750">
+    <Window.Resources>
+        <Style x:Key="ContainerStyle" TargetType="ListViewItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ContentControl}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="Transparent" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -18,10 +37,11 @@
         
         <!-- Filename list-->
         <ScrollViewer Grid.Row="0"
-                      Name="ScrlViewer"
                       HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Auto">
-            <ListView>
+            <ListView ItemsSource="{Binding List}"
+                      Name="FileList"
+                      ItemContainerStyle="{StaticResource ContainerStyle}">
                 <ListView.Template>
                     <ControlTemplate>
                         <ItemsPresenter />

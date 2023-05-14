@@ -23,16 +23,34 @@ namespace FileNumRename
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = Item.Collection;
         }
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
+            e.Handled = true;
 
+            switch (e.Key)
+            {
+                case Key.Escape:
+                    Application.Current.Shutdown();
+                    break;
+                case Key.Up:
+                    Item.Collection.UpdateIncrease(1);
+                    break;
+                case Key.Down:
+                    Item.Collection.UpdateIncrease(-1);
+                    break;
+                case Key.Left:
+                    break;
+                case Key.Right:
+                    break;
+            }
         }
 
         private void Window_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (!ScrlViewer.IsMouseOver)
+            if (!FileList.IsMouseOver)
             {
                 this.DragMove();
             }

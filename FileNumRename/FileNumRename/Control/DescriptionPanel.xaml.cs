@@ -23,6 +23,7 @@ namespace FileNumRename.Control
         public DescriptionPanel()
         {
             InitializeComponent();
+            this.DataContext = Item.Collection;
         }
     }
 }

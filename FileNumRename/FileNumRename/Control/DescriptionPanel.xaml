@@ -29,9 +29,9 @@
         <!-- cursor/increase -->
         <StackPanel Orientation="Horizontal" >
             <TextBlock Text="[ Cursor: " />
-            <TextBlock Text="1" />
+            <TextBlock Text="{Binding Cursor, Mode=OneWay, FallbackValue=1}" />
             <TextBlock Text=" ] [ Increase: " />
-            <TextBlock Text="1" />
+            <TextBlock Text="{Binding Increase, Mode=OneWay, FallbackValue=1}" />
             <TextBlock Text=" ]" />
         </StackPanel>
 
