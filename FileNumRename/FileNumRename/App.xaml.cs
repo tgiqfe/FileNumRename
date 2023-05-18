@@ -15,7 +15,6 @@ namespace FileNumRename
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            //Item.Collection = new(e.Args);
             Item.Collection = new(new string[]
             {
                 @"D:\Sample_10_0001_98.txt",

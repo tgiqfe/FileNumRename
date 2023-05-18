@@ -42,10 +42,10 @@ namespace FileNumRename
                     Item.Collection.UpdateIncrease(-1);
                     break;
                 case Key.Left:
-                    Item.Collection.UpdateCursor(1);
+                    Item.Collection.UpdateCursor(-1);
                     break;
                 case Key.Right:
-                    Item.Collection.UpdateCursor(-1);
+                    Item.Collection.UpdateCursor(1);
                     break;
             }
         }

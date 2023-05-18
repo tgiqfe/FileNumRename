@@ -47,28 +47,24 @@ namespace FileNumRename.Control
             this.FileName = Path.GetFileName(path);
             this.ParentPath = Path.GetDirectoryName(path);
             this.NameNumbers = NameNumber.Deploy(FileName);
-            //this.StatusIcon = EFontAwesomeIcon.Regular_PenToSquare;
-            //this.StatusText = "Setting...";
-
-            //UpdateCursor(defCursor, defIncrease);
-
+            
             InitializeComponent();
             this.DataContext = this;
         }
 
-        private long _destinationNumber = -1;
         private NameNumber _number = null;
+        private long _destNum = -1;
 
         public bool PreCheck(int cursor, long increase)
         {
             _number = NameNumbers[cursor];
-            _destinationNumber = _number.Number + increase;
-            return _destinationNumber >= 0 && _destinationNumber <= _number.Max;
+            _destNum = _number.Number + increase;
+            return _destNum >= 0 && _destNum <= _number.Max;
         }
 
         public void UpdateIncrease()
         {
-            this.NumberDst = _destinationNumber.ToString().PadLeft(_number.Length, '0');
+            this.NumberDst = _destNum.ToString().PadLeft(_number.Length, '0');
             OnPropertyChanged(nameof(NumberDst));
         }
 
@@ -77,47 +73,19 @@ namespace FileNumRename.Control
             this.NamePartsPre = FileName.Substring(0, _number.Position);
             this.NamePartsSuf = FileName.Substring(_number.Position + _number.Length);
             this.NumberSrc = _number.Number.ToString().PadLeft(_number.Length, '0');
-            this.NumberDst = _destinationNumber.ToString().PadLeft(_number.Length, '0');
+            this.NumberDst = _destNum.ToString().PadLeft(_number.Length, '0');
 
             OnPropertyChanged(nameof(NamePartsPre));
             OnPropertyChanged(nameof(NamePartsSuf));
             OnPropertyChanged(nameof(NumberSrc));
             OnPropertyChanged(nameof(NumberDst));
         }
-
-        /*
-        public void UpdateIncrease(int cursor, long increase)
-        {
-            var number = NameNumbers[cursor];
-            long dstNum = number.Number + increase;
-
-            if ((increase == 0) ||
-                (increase > 0 && dstNum <= number.Max) ||
-                (increase < 0 && dstNum >= 0))
-            {
-                this.NumberDst = dstNum.ToString().PadLeft(number.Length, '0');
-                OnPropertyChanged(nameof(NumberDst));
-            }
-        }
-
-        public void UpdateCursor(int cursor, long increase)
-        {
-            var number = NameNumbers[cursor];
-            this.NamePartsPre = FileName.Substring(0, number.Position);
-            this.NamePartsSuf = FileName.Substring(number.Position + number.Length);
-            this.NumberSrc = number.Number.ToString().PadLeft(number.Length, '0');
-            this.NumberDst = (number.Number + increase).ToString().PadLeft(number.Length, '0');
-
-            OnPropertyChanged(nameof(NamePartsPre));
-            OnPropertyChanged(nameof(NamePartsSuf));
-            OnPropertyChanged(nameof(NumberSrc));
-            OnPropertyChanged(nameof(NumberDst));
-        }
-        */
 
         public void CheckStatus(string[] srcFilePaths)
         {
             string dstFilePath = Path.Combine(ParentPath, NamePartsPre + NumberDst + NamePartsSuf);
+            
+            //  ファイル名変更無しの場合
             if(FilePath.Equals(dstFilePath, StringComparison.OrdinalIgnoreCase))
             {
                 StatusIcon = EFontAwesomeIcon.Regular_NoteSticky;
@@ -127,6 +95,7 @@ namespace FileNumRename.Control
                 return;
             }
             
+            //  変更後のファイル名がすでに存在する場合
             if (!srcFilePaths.Contains(dstFilePath) && File.Exists(dstFilePath))
             {
                 StatusIcon = EFontAwesomeIcon.Solid_Xmark;
@@ -135,6 +104,8 @@ namespace FileNumRename.Control
                 OnPropertyChanged(nameof(StatusText));
                 return;
             }
+
+            //  上記の問題に該当せず。編集中。
             StatusIcon = EFontAwesomeIcon.Regular_PenToSquare;
             StatusText = "Setting...";
             OnPropertyChanged(nameof(StatusIcon));
