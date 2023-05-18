@@ -108,6 +108,17 @@ namespace FileNumRename.Lib
             }
         }
 
+        public void ToMaxIncrease()
+        {
+
+        }
+
+        public void ToMinIncrease()
+        {
+            var minNum = List.Min(x => x.NameNumbers[Cursor].Number);
+            UpdateIncrease(minNum);
+        }
+
         #region Inotify change
 
         public event PropertyChangedEventHandler PropertyChanged;

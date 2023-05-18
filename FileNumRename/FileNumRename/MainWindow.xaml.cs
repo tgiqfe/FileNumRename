@@ -47,6 +47,10 @@ namespace FileNumRename
                 case Key.Right:
                     Item.Collection.UpdateCursor(1);
                     break;
+                case Key.Home:
+                    break;
+                case Key.End:
+                    break;
             }
         }
 

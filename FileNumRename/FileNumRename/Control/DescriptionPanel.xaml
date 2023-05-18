@@ -22,6 +22,8 @@
             <Setter Property="CornerRadius" Value="3" />
             <Setter Property="BorderThickness" Value="1.5" />
             <Setter Property="BorderBrush" Value="Black" />
+            <Setter Property="Padding" Value="3 1" />
+            <Setter Property="Margin" Value="0 1" />
         </Style>
     </UserControl.Resources>
 
@@ -37,6 +39,7 @@
 
         <Grid Margin="20 0">
             <Grid.RowDefinitions>
+                <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
@@ -75,20 +78,56 @@
                        Text="Decrease." />
 
             <!-- 3行目 -->
-            <Border Grid.Row="2" Grid.Column="0">
-                <TextBlock Text="Esc" 
-                           FontSize="10"
-                           Padding="3 0" />
-            </Border>
+            <StackPanel Grid.Row="2" Grid.Column="0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                <Border>
+                    <TextBlock Text="Home" 
+                               FontSize="11"
+                               HorizontalAlignment="Center"/>
+                </Border>
+            </StackPanel>
             <TextBlock Grid.Row="2" Grid.Column="1"
                        Margin="3 0"
-                       Text="Process End." />
-            <Border Grid.Row="2" Grid.Column="2">
-                <TextBlock Text="Enter" 
-                           FontSize="10"
-                           Padding="3 0" />
-            </Border>
+                       Text="Increase to Max." />
+
+            <StackPanel Grid.Row="2" Grid.Column="2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                <Border>
+                    <TextBlock Text="End" 
+                               FontSize="11"
+                               HorizontalAlignment="Center"/>
+                </Border>
+            </StackPanel>
             <TextBlock Grid.Row="2" Grid.Column="3"
+                       Margin="3 0"
+                       Text="Increase to Min (0)." />
+            
+            
+            <!-- 4行目 -->
+            <StackPanel Grid.Row="3" Grid.Column="0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                <Border>
+                    <TextBlock Text="Esc" 
+                               FontSize="11"
+                               HorizontalAlignment="Center"/>
+                </Border>
+            </StackPanel>
+            <TextBlock Grid.Row="3" Grid.Column="1"
+                       Margin="3 0"
+                       Text="Process End." />
+
+            <StackPanel Grid.Row="3" Grid.Column="2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                <Border>
+                    <TextBlock Text="Enter" 
+                           FontSize="11"/>
+                </Border>
+            </StackPanel>
+            <TextBlock Grid.Row="3" Grid.Column="3"
                        Margin="3 0"
                        Text="Rename start." />
         </Grid>
