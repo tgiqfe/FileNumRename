@@ -1,35 +1,65 @@
 ﻿using FileNumRename.Control;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace FileNumRename.Lib
 {
-    internal class FileCollection
+    internal class FileCollection : INotifyPropertyChanged
     {
         private const int DEF_CURSOR = 0;
-        private const long DEF_INCREASE = 1;
+        private const long DEF_INCREASE = 0;
 
         public string[] SourceFilePaths { get; set; }
         public int CursorLength { get; private set; }
         public long[] Increases { get; private set; }
 
-        public int Cursor { get; set; }
+        private int _cursor = DEF_CURSOR;
+        public int Cursor
+        {
+            get { return _cursor; }
+            set { _cursor = value; OnPropertyChanged(nameof(Cursor)); }
+        }
         public long Increase
         {
             get { return Increases[Cursor]; }
-            set { Increases[Cursor] = value; }
+            set { Increases[Cursor] = value; OnPropertyChanged(nameof(Increase)); }
         }
         public List<FileSummary> List { get; set; }
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="paths">
+        /// 引数の1つ目がフォルダー ⇒ 引数1のフォルダー内の全ファイルを対象にする。引数2以降は無視
+        /// 引数の1つ目がファイル ⇒ 引数の中からファイルのみを対象にする。フォルダーがあっても無視
+        /// </param>
         public FileCollection(string[] paths)
+        {
+            if (paths.Length > 0)
+            {
+                if (Directory.Exists(paths[0]))
+                {
+                    Init(Directory.GetFiles(paths[0]));
+                }
+                else
+                {
+                    Init(paths.Where(x => File.Exists(x)).ToArray());
+                }
+            }
+        }
+
+        private void Init(string[] paths)
         {
             this.List = new(paths.Select((x, y) => new FileSummary(x, y)));
             this.SourceFilePaths = paths;
             this.CursorLength = List.Min(x => x.NameNumbers.Length);
-            this.Increases = Enumerable.Repeat<long>(1, CursorLength).ToArray();
+            this.Increases = Enumerable.Repeat<long>(DEF_INCREASE, CursorLength).ToArray();
 
             List.ForEach(x =>
             {
@@ -39,10 +69,13 @@ namespace FileNumRename.Lib
             });
         }
 
+        /// <summary>
+        /// 増減値変更 (↑↓キー)
+        /// </summary>
+        /// <param name="increase"></param>
         public void UpdateIncrease(long increase)
         {
-            var ret = List.All(x => x.PreCheck(Cursor, (Increase + increase)));
-            if (ret)
+            if (List.All(x => x.PreCheck(Cursor, (Increase + increase))))
             {
                 this.Increase += increase;
                 List.ForEach(x =>
@@ -53,15 +86,19 @@ namespace FileNumRename.Lib
             }
         }
 
+        /// <summary>
+        /// カーソル移動 (←→キー)
+        /// </summary>
+        /// <param name="cursor"></param>
         public void UpdateCursor(int cursor)
         {
             if ((Cursor == 0 && cursor < 0) || (Cursor == (CursorLength - 1) && cursor > 0))
             {
                 return;
             }
+
             Cursor += cursor;
-            var ret = List.All(x => x.PreCheck(Cursor, Increase));
-            if (ret)
+            if (List.All(x => x.PreCheck(Cursor, Increase)))
             {
                 List.ForEach(x =>
                 {
@@ -70,5 +107,16 @@ namespace FileNumRename.Lib
                 });
             }
         }
+
+        #region Inotify change
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        #endregion
     }
 }
