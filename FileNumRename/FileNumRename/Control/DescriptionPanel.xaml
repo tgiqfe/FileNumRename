@@ -25,7 +25,7 @@
         </Style>
     </UserControl.Resources>
 
-    <StackPanel Margin="15 5">
+    <StackPanel Margin="15 5 15 10">
         <!-- cursor/increase -->
         <StackPanel Orientation="Horizontal" >
             <TextBlock Text="[ Cursor: " />

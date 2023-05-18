@@ -40,28 +40,59 @@ namespace FileNumRename.Control
         public string StatusText { get; set; }
 
 
-        public FileSummary(string path, int index, int defCursor, long defIncrease)
+        public FileSummary(string path, int index)
         {
             Index = index + 1;
             this.FilePath = path;
             this.FileName = Path.GetFileName(path);
             this.ParentPath = Path.GetDirectoryName(path);
             this.NameNumbers = NameNumber.Deploy(FileName);
-            this.StatusIcon = EFontAwesomeIcon.Regular_PenToSquare;
-            this.StatusText = "Setting...";
+            //this.StatusIcon = EFontAwesomeIcon.Regular_PenToSquare;
+            //this.StatusText = "Setting...";
 
-            UpdateCursor(defCursor, defIncrease);
+            //UpdateCursor(defCursor, defIncrease);
 
             InitializeComponent();
             this.DataContext = this;
         }
 
+        private long _destinationNumber = -1;
+        private NameNumber _number = null;
+
+        public bool PreCheck(int cursor, long increase)
+        {
+            _number = NameNumbers[cursor];
+            _destinationNumber = _number.Number + increase;
+            return _destinationNumber >= 0 && _destinationNumber <= _number.Max;
+        }
+
+        public void UpdateIncrease()
+        {
+            this.NumberDst = _destinationNumber.ToString().PadLeft(_number.Length, '0');
+            OnPropertyChanged(nameof(NumberDst));
+        }
+
+        public void UpdateCursor()
+        {
+            this.NamePartsPre = FileName.Substring(0, _number.Position);
+            this.NamePartsSuf = FileName.Substring(_number.Position + _number.Length);
+            this.NumberSrc = _number.Number.ToString().PadLeft(_number.Length, '0');
+            this.NumberDst = _destinationNumber.ToString().PadLeft(_number.Length, '0');
+
+            OnPropertyChanged(nameof(NamePartsPre));
+            OnPropertyChanged(nameof(NamePartsSuf));
+            OnPropertyChanged(nameof(NumberSrc));
+            OnPropertyChanged(nameof(NumberDst));
+        }
+
+        /*
         public void UpdateIncrease(int cursor, long increase)
         {
             var number = NameNumbers[cursor];
             long dstNum = number.Number + increase;
 
-            if ((increase > 0 && dstNum <= number.Max) ||
+            if ((increase == 0) ||
+                (increase > 0 && dstNum <= number.Max) ||
                 (increase < 0 && dstNum >= 0))
             {
                 this.NumberDst = dstNum.ToString().PadLeft(number.Length, '0');
@@ -82,18 +113,32 @@ namespace FileNumRename.Control
             OnPropertyChanged(nameof(NumberSrc));
             OnPropertyChanged(nameof(NumberDst));
         }
+        */
 
         public void CheckStatus(string[] srcFilePaths)
         {
             string dstFilePath = Path.Combine(ParentPath, NamePartsPre + NumberDst + NamePartsSuf);
+            if(FilePath.Equals(dstFilePath, StringComparison.OrdinalIgnoreCase))
+            {
+                StatusIcon = EFontAwesomeIcon.Regular_NoteSticky;
+                StatusText = "Not Change.";
+                OnPropertyChanged(nameof(StatusIcon));
+                OnPropertyChanged(nameof(StatusText));
+                return;
+            }
+            
             if (!srcFilePaths.Contains(dstFilePath) && File.Exists(dstFilePath))
             {
                 StatusIcon = EFontAwesomeIcon.Solid_Xmark;
                 StatusText = "File already exists.";
+                OnPropertyChanged(nameof(StatusIcon));
+                OnPropertyChanged(nameof(StatusText));
                 return;
             }
             StatusIcon = EFontAwesomeIcon.Regular_PenToSquare;
             StatusText = "Setting...";
+            OnPropertyChanged(nameof(StatusIcon));
+            OnPropertyChanged(nameof(StatusText));
         }
 
         #region Inotify change

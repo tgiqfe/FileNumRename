@@ -18,11 +18,11 @@ namespace FileNumRename
             //Item.Collection = new(e.Args);
             Item.Collection = new(new string[]
             {
-                @"D:\Sample_0001.txt",
-                @"D:\Sample_0002.txt",
-                @"D:\Sample_0003.txt",
-                @"D:\Sample_0004.txt",
-                @"D:\Sample_0005.txt",
+                @"D:\Sample_10_0001_98.txt",
+                @"D:\Sample_10_0002_98.txt",
+                @"D:\Sample_10_0003_98.txt",
+                @"D:\Sample_10_0004_98.txt",
+                @"D:\Sample_10_0005_98.txt",
             });
         }
 
