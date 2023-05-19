@@ -110,13 +110,14 @@ namespace FileNumRename.Lib
 
         public void ToMaxIncrease()
         {
-
+            var maxDiffNum = List.Min(x => x.NameNumbers[Cursor].Max - x.NameNumbers[Cursor].Number) + (Increase * -1);
+            UpdateIncrease(maxDiffNum);
         }
 
         public void ToMinIncrease()
         {
-            var minNum = List.Min(x => x.NameNumbers[Cursor].Number);
-            UpdateIncrease(minNum);
+            var minDiffNum = (List.Min(x => x.NameNumbers[Cursor].Number) + Increase) * -1;
+            UpdateIncrease(minDiffNum);
         }
 
         #region Inotify change

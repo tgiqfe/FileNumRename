@@ -48,8 +48,10 @@ namespace FileNumRename
                     Item.Collection.UpdateCursor(1);
                     break;
                 case Key.Home:
+                    Item.Collection.ToMaxIncrease();
                     break;
                 case Key.End:
+                    Item.Collection.ToMinIncrease();
                     break;
             }
         }
