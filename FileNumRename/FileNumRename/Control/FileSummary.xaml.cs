@@ -2,21 +2,14 @@
 using FontAwesome6;
 using Microsoft.VisualBasic.FileIO;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace FileNumRename.Control
 {
@@ -32,6 +25,8 @@ namespace FileNumRename.Control
         public string ParentPath { get; private set; }
         public string FileName { get; private set; }
         public string FilePath { get { return Path.Combine(ParentPath, FileName); } }
+        public string Hash { get; private set; }
+        
         public NameNumber[] NameNumbers { get; private set; }
 
         public string NamePartsPre { get; private set; }
@@ -56,8 +51,9 @@ namespace FileNumRename.Control
             Index = index + 1;
             this.FileName = Path.GetFileName(path);
             this.ParentPath = Path.GetDirectoryName(path);
-            this.NameNumbers = NameNumber.Deploy(FileName);
+            this.Hash = string.Join("", MD5.Create().ComputeHash(File.ReadAllBytes(path)).Select(x => $"{x:x2}"));
 
+            this.NameNumbers = NameNumber.Deploy(FileName);
             if (NameNumbers?.Length > 0)
             {
                 this.Enabled = true;
@@ -66,6 +62,8 @@ namespace FileNumRename.Control
             InitializeComponent();
             this.DataContext = this;
         }
+
+        #region Manage Cursor,Increase
 
         private NameNumber _number = null;
         private long _destNum = -1;
@@ -149,6 +147,8 @@ namespace FileNumRename.Control
             OnPropertyChanged(nameof(StatusText));
         }
 
+        #endregion
+        
         public void ChangeFileName()
         {
             try

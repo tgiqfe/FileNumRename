@@ -151,7 +151,10 @@ namespace FileNumRename.Lib
             {
                 x.PreCheck(Cursor, DEF_INCREASE);
                 x.UpdateCursor();
+                Item.RenameHistory.AddHistory(x.Hash, x.FileName);
             });
+
+            Item.RenameHistory.Save();
         }
 
         #region Inotify change

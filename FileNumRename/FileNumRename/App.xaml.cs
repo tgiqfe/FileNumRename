@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileNumRename.Lib;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -16,11 +17,12 @@ namespace FileNumRename
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             Item.Collection = new(e.Args);
+            Item.RenameHistory = RenameHistory.Load();
         }
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
-
+            Item.RenameHistory.Save();
         }
     }
 }

@@ -10,5 +10,7 @@ namespace FileNumRename
     internal class Item
     {
         public static FileCollection Collection = null;
+
+        public static RenameHistory RenameHistory = null;
     }
 }
