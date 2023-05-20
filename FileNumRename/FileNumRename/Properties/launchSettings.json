@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FileNumRename": {
+      "commandName": "Project",
+      "commandLineArgs": "D:\\Test\\Sample"
+    }
+  }
+}

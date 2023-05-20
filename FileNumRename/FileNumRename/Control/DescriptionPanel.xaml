@@ -1,0 +1,121 @@
+﻿<UserControl x:Class="FileNumRename.Control.DescriptionPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FileNumRename.Control"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Noto Sans JP" />
+            <Setter Property="FontSize" Value="14px" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Padding" Value="0 3" />
+        </Style>
+        <Style TargetType="local:KeyBorder">
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="BorderThickness" Value="1.5" />
+            <Setter Property="BorderBrush" Value="Black" />
+            <Setter Property="Padding" Value="3 1" />
+            <Setter Property="Margin" Value="0 1" />
+            <Setter Property="MinWidth" Value="28" />
+        </Style>
+    </UserControl.Resources>
+
+    <StackPanel Margin="15 5 15 10">
+        <!-- cursor/increase -->
+        <StackPanel Orientation="Horizontal" >
+            <TextBlock Text="[ Cursor: " />
+            <TextBlock Text="{Binding Cursor, Mode=OneWay, FallbackValue=1}" />
+            <TextBlock Text=" ] [ Increase: " />
+            <TextBlock Text="{Binding Increase, Mode=OneWay, FallbackValue=1}" />
+            <TextBlock Text=" ]" />
+        </StackPanel>
+
+        <Grid Margin="20 0">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- 1行目 -->
+            <StackPanel Grid.Row="0" Grid.Column="0"
+                        HorizontalAlignment="Center">
+                <local:KeyBorder Text="←" />
+            </StackPanel>
+            <TextBlock Grid.Row="0" Grid.Column="1"
+                       Margin="3 0"
+                       Text="Move cursor to Left." />
+            <StackPanel Grid.Row="0" Grid.Column="2"
+                        HorizontalAlignment="Center">
+                <local:KeyBorder Text="→" />
+            </StackPanel>
+            <TextBlock Grid.Row="0" Grid.Column="3"
+                       Margin="3 0"
+                       Text="Move cursor to Right." />
+
+            <!-- 2行目 -->
+            <StackPanel Grid.Row="1" Grid.Column="0"
+                        HorizontalAlignment="Center">
+                <local:KeyBorder Text="↑" />
+            </StackPanel>
+            <TextBlock Grid.Row="1" Grid.Column="1"
+                       Margin="3 0"
+                       Text="Increase." />
+            <StackPanel Grid.Row="1" Grid.Column="2"
+                        HorizontalAlignment="Center">
+                <local:KeyBorder Text="↓" />
+            </StackPanel>
+            <TextBlock Grid.Row="1" Grid.Column="3"
+                       Margin="3 0"
+                       Text="Decrease." />
+
+            <!-- 3行目 -->
+            <StackPanel Grid.Row="2" Grid.Column="0"
+                        Orientation="Horizontal">
+                <local:KeyBorder Text="Ctrl" />
+                <TextBlock Text="+" Margin="3"/>
+                <local:KeyBorder Text="↑" />
+            </StackPanel>
+
+            <TextBlock Grid.Row="2" Grid.Column="1"
+                       Margin="3 0"
+                       Text="Increase to Max." />
+            <StackPanel Grid.Row="2" Grid.Column="2"
+                        Orientation="Horizontal">
+                <local:KeyBorder Text="Ctrl" />
+                <TextBlock Text="+" Margin="3"/>
+                <local:KeyBorder Text="↓" />
+            </StackPanel>
+
+            <TextBlock Grid.Row="2" Grid.Column="3"
+                       Margin="3 0"
+                       Text="Increase to Min (0)." />
+
+            <!-- 4行目 -->
+            <StackPanel Grid.Row="3" Grid.Column="0"
+                        HorizontalAlignment="Center">
+                <local:KeyBorder Text="Esc" />
+            </StackPanel>
+            <TextBlock Grid.Row="3" Grid.Column="1"
+                       Margin="3 0"
+                       Text="Process End." />
+            <StackPanel Grid.Row="3" Grid.Column="2"
+                        HorizontalAlignment="Center">
+                <local:KeyBorder Text="Enter" />
+            </StackPanel>
+            <TextBlock Grid.Row="3" Grid.Column="3"
+                       Margin="3 0"
+                       Text="Rename start." />
+        </Grid>
+    </StackPanel>
+</UserControl>

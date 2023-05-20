@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="FileNumRename.Control.FileSummary"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FileNumRename.Control"
+             xmlns:fa="http://schemas.fontawesome.com/icons/fonts"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Noto Sans JP" />
+            <Setter Property="FontSize" Value="14px" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style TargetType="fa:FontAwesome">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Horizontal" Margin="1">
+        <TextBlock Text="{Binding Index, Mode=OneTime, FallbackValue=1}" Width="45" TextAlignment="Right" />
+        <TextBlock Text="(" Padding="5 0" />
+        <TextBlock Text="{Binding NumberSrc, Mode=OneWay, FallbackValue=001}" />
+        <fa:FontAwesome Icon="Solid_AnglesRight" Padding="5 0" />
+        <TextBlock Text="{Binding NumberDst, Mode=OneWay, FallbackValue=099}" />
+        <TextBlock Text=")" Padding="5 0" />
+        <Grid Margin="10 0" MinWidth="300">
+            <Grid.RowDefinitions />
+            <TextBlock Grid.Row="0" Background="#e4e4e4" Height="22" />
+            <StackPanel Orientation="Horizontal" Margin="8 0">
+                <TextBlock Text="{Binding NamePartsPre, Mode=OneWay, FallbackValue=Example_}" />
+                <TextBlock Text="{Binding NumberDst, Mode=OneWay, FallbackValue=000001}" FontSize="16" FontWeight="Bold" Foreground="Blue"/>
+                <TextBlock Text="{Binding NamePartsSuf, Mode=OneWay, FallbackValue=.txt}" />
+            </StackPanel>
+        </Grid>
+        <fa:FontAwesome Icon="{Binding StatusIcon, Mode=OneWay, FallbackValue=Regular_PenToSquare}" />
+        <TextBlock Text="{Binding StatusText, Mode=OneWay, FallbackValue=Setting...}" Padding="5 0"/>
+    </StackPanel>
+</UserControl>
