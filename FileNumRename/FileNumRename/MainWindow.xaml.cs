@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileNumRename.Control;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,22 +37,36 @@ namespace FileNumRename
                     Application.Current.Shutdown();
                     break;
                 case Key.Up:
-                    Item.Collection.UpdateIncrease(1);
+                    if(Keyboard.Modifiers == ModifierKeys.Control)
+                    {
+                        //  increase の値を最大値に
+                        Item.Collection.ToMaxIncrease();
+                    }
+                    else
+                    {
+                        //  Increase の値を一つ上に
+                        Item.Collection.UpdateIncrease(1);
+                    }
                     break;
                 case Key.Down:
-                    Item.Collection.UpdateIncrease(-1);
+                    if (Keyboard.Modifiers == ModifierKeys.Control)
+                    {
+                        //  increase の値を最小値に
+                        Item.Collection.ToMinIncrease();
+                    }
+                    else
+                    {
+                        //  Increase の値を一つ下に
+                        Item.Collection.UpdateIncrease(-1);
+                    }   
                     break;
                 case Key.Left:
+                    //  Cursor の値を一つ下げる (左に移動)
                     Item.Collection.UpdateCursor(-1);
                     break;
                 case Key.Right:
+                    //  Cursor の値を一つ上げる (右に移動)
                     Item.Collection.UpdateCursor(1);
-                    break;
-                case Key.Home:
-                    Item.Collection.ToMaxIncrease();
-                    break;
-                case Key.End:
-                    Item.Collection.ToMinIncrease();
                     break;
             }
         }
