@@ -52,27 +52,25 @@
             </Grid.ColumnDefinitions>
             
             <!-- 1行目 -->
-            <fa:FontAwesome Grid.Row="0" Grid.Column="0"
-                            Margin="3 0"
-                            Icon="Solid_LeftLong" />
+            <local:KeyBorder Grid.Row="0" Grid.Column="0"
+                             Icon="Solid_LeftLong" />
             <TextBlock Grid.Row="0" Grid.Column="1"
                        Margin="3 0"
                        Text="Move cursor to Left." />
-            <fa:FontAwesome Grid.Row="0" Grid.Column="2"
-                            Margin="3 0"
-                            Icon="Solid_RightLong" />
+            <local:KeyBorder Grid.Row="0" Grid.Column="2"
+                             Icon="Solid_RightLong" />
             <TextBlock Grid.Row="0" Grid.Column="3"
                        Margin="3 0"
                        Text="Move cursor to Right." />
 
             <!-- 2行目 -->
-            <fa:FontAwesome Grid.Row="1" Grid.Column="0"
-                            Icon="Solid_UpLong" />
+            <local:KeyBorder Grid.Row="1" Grid.Column="0"
+                             Icon="Solid_UpLong" />
             <TextBlock Grid.Row="1" Grid.Column="1"
                        Margin="3 0"
                        Text="Increase." />
-            <fa:FontAwesome Grid.Row="1" Grid.Column="2"
-                            Icon="Solid_DownLong" />
+            <local:KeyBorder Grid.Row="1" Grid.Column="2"
+                             Icon="Solid_DownLong" />
             <TextBlock Grid.Row="1" Grid.Column="3"
                        Margin="3 0"
                        Text="Decrease." />
