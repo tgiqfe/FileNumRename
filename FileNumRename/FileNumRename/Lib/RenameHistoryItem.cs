@@ -10,8 +10,7 @@ namespace FileNumRename.Lib
     {
         public string Name { get; set; }
         public string Hash { get; set; }
+        public DateTime LastRenameTime { get; set; }
         public List<string> History { get; set; }
-
-        
     }
 }

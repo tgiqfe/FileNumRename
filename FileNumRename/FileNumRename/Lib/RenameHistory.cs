@@ -19,6 +19,8 @@ namespace FileNumRename.Lib
             this.Histories = new();
         }
 
+        #region load/save
+
         public static RenameHistory Load()
         {
             try
@@ -37,26 +39,36 @@ namespace FileNumRename.Lib
                     new JsonSerializerOptions() { WriteIndented = true }));
         }
 
-        public void AddHistory(string hash, string fileName)
+        public void ClearOldLog()
         {
-            var history = Histories.FirstOrDefault(x => x.Hash == hash);
-            string now = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
-            if (history == null)
+            int retention = 30;
+            var borderTime = DateTime.Now.AddDays(retention * -1);
+            Histories = Histories.Where(x => x.LastRenameTime > borderTime).ToList();
+        }
+
+        #endregion
+
+        public void AddHistory(string hash, string fileName, DateTime now, string nowText)
+        {
+            var item = Histories.FirstOrDefault(x => x.Hash == hash);
+            if (item == null)
             {
                 Histories.Add(new RenameHistoryItem()
                 {
                     Name = fileName,
                     Hash = hash,
-                    History = new(new string[1] { $"[{now}] {fileName}" }),
+                    LastRenameTime = now,
+                    History = new(new string[1] { $"[{nowText}] {fileName}" }),
                 });
             }
             else
             {
                 //  "[yyyy/MM/dd HH:mm:ss] " で、文字数22。
-                string lastName = history.History.Last().Substring(22);
+                string lastName = item.History.Last().Substring(22);
                 if (lastName != fileName)
                 {
-                    history.History.Add($"[{now}] {fileName}");
+                    item.LastRenameTime = now;
+                    item.History.Add($"[{nowText}] {fileName}");
                 }
             }
         }

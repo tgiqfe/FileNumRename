@@ -22,6 +22,7 @@ namespace FileNumRename
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
+            Item.RenameHistory.ClearOldLog();
             Item.RenameHistory.Save();
         }
     }

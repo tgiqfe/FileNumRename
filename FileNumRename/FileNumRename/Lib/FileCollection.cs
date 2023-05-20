@@ -151,7 +151,7 @@ namespace FileNumRename.Lib
             {
                 x.PreCheck(Cursor, DEF_INCREASE);
                 x.UpdateCursor();
-                Item.RenameHistory.AddHistory(x.Hash, x.FileName);
+                Item.RenameHistory.AddHistory(x.Hash, x.FileName, DateTime.Now, DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
             });
 
             Item.RenameHistory.Save();
