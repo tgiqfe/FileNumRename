@@ -58,7 +58,7 @@ namespace FileNumRename.Lib
         {
             this.List = new(paths.Select((x, y) => new FileSummary(x, y)));
             this.SourceFilePaths = paths;
-            this.CursorLength = List.Min(x => x.NameNumbers.Length);
+            this.CursorLength = List.Where(x => x.Enabled).Min(x => x.NameNumbers.Length);
             this.Increases = Enumerable.Repeat<long>(DEF_INCREASE, CursorLength).ToArray();
 
             List.ForEach(x =>
@@ -110,13 +110,17 @@ namespace FileNumRename.Lib
 
         public void ToMaxIncrease()
         {
-            var maxDiffNum = List.Min(x => x.NameNumbers[Cursor].Max - x.NameNumbers[Cursor].Number) + (Increase * -1);
+            var maxDiffNum = List.
+                Where(x => x.Enabled).
+                Min(x => x.NameNumbers[Cursor].Max - x.NameNumbers[Cursor].Number) + (Increase * -1);
             UpdateIncrease(maxDiffNum);
         }
 
         public void ToMinIncrease()
         {
-            var minDiffNum = (List.Min(x => x.NameNumbers[Cursor].Number) + Increase) * -1;
+            var minDiffNum = (List.
+                Where(x => x.Enabled).
+                Min(x => x.NameNumbers[Cursor].Number) + Increase) * -1;
             UpdateIncrease(minDiffNum);
         }
 
@@ -127,19 +131,22 @@ namespace FileNumRename.Lib
             if (Increase > 0)
             {
                 //  プラス方向への変更
-                List.OrderByDescending(x => x.NameNumbers[Cursor].Number).
+                List.Where(x => x.Enabled).
+                    OrderByDescending(x => x.NameNumbers[Cursor].Number).
                     ToList().
                     ForEach(x => x.ChangeFileName());
             }
             else if (Increase < 0)
             {
                 //  マイナス方向への変更
-                List.OrderBy(x => x.NameNumbers[Cursor].Number).
+                List.Where(x => x.Enabled).
+                    OrderBy(x => x.NameNumbers[Cursor].Number).
                     ToList().
                     ForEach(x => x.ChangeFileName());
             }
 
             Increase = DEF_INCREASE;
+            SourceFilePaths = List.Select(x => x.DestinationPath).ToArray();
             List.ForEach(x =>
             {
                 x.PreCheck(Cursor, DEF_INCREASE);

@@ -25,6 +25,8 @@ namespace FileNumRename.Control
     /// </summary>
     public partial class FileSummary : UserControl, INotifyPropertyChanged
     {
+        public bool Enabled { get; set; }
+
         public int Index { get; private set; }
 
         public string ParentPath { get; private set; }
@@ -43,12 +45,11 @@ namespace FileNumRename.Control
         }
         public string DestinationPath
         {
-            get { return Path.Combine(ParentPath, NamePartsPre + NumberDst + NamePartsSuf) ; }
+            get { return Path.Combine(ParentPath, NamePartsPre + NumberDst + NamePartsSuf); }
         }
-        
+
         public EFontAwesomeIcon StatusIcon { get; set; }
         public string StatusText { get; set; }
-
 
         public FileSummary(string path, int index)
         {
@@ -56,6 +57,11 @@ namespace FileNumRename.Control
             this.FileName = Path.GetFileName(path);
             this.ParentPath = Path.GetDirectoryName(path);
             this.NameNumbers = NameNumber.Deploy(FileName);
+
+            if (NameNumbers?.Length > 0)
+            {
+                this.Enabled = true;
+            }
 
             InitializeComponent();
             this.DataContext = this;
@@ -66,6 +72,8 @@ namespace FileNumRename.Control
 
         public bool PreCheck(int cursor, long increase)
         {
+            if (!Enabled) return true;
+
             _number = NameNumbers[cursor];
             _destNum = _number.Number + increase;
             return _destNum >= 0 && _destNum <= _number.Max;
@@ -73,16 +81,28 @@ namespace FileNumRename.Control
 
         public void UpdateIncrease()
         {
+            if (!Enabled) return;
+
             this.NumberDst = _destNum.ToString().PadLeft(_number.Length, '0');
             OnPropertyChanged(nameof(NumberDst));
         }
 
         public void UpdateCursor()
         {
-            this.NamePartsPre = FileName.Substring(0, _number.Position);
-            this.NamePartsSuf = FileName.Substring(_number.Position + _number.Length);
-            this.NumberSrc = _number.Number.ToString().PadLeft(_number.Length, '0');
-            this.NumberDst = _destNum.ToString().PadLeft(_number.Length, '0');
+            if (Enabled)
+            {
+                this.NamePartsPre = FileName.Substring(0, _number.Position);
+                this.NamePartsSuf = FileName.Substring(_number.Position + _number.Length);
+                this.NumberSrc = _number.Number.ToString().PadLeft(_number.Length, '0');
+                this.NumberDst = _destNum.ToString().PadLeft(_number.Length, '0');
+            }
+            else
+            {
+                this.NamePartsPre = FileName;
+                this.NamePartsSuf = "";
+                this.NumberSrc = "";
+                this.NumberDst = "";
+            }
 
             OnPropertyChanged(nameof(NamePartsPre));
             OnPropertyChanged(nameof(NamePartsSuf));
@@ -92,6 +112,16 @@ namespace FileNumRename.Control
 
         public void CheckStatus(string[] srcFilePaths)
         {
+            //  ファイル名に数字が含まれていない場合
+            if (!Enabled)
+            {
+                StatusIcon = EFontAwesomeIcon.Regular_SquareMinus;
+                StatusText = "No number in Filename.";
+                OnPropertyChanged(nameof(StatusIcon));
+                OnPropertyChanged(nameof(StatusText));
+                return;
+            }
+
             //  ファイル名変更無しの場合
             if (FilePath.Equals(DestinationPath, StringComparison.OrdinalIgnoreCase))
             {
