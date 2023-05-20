@@ -1,18 +1,5 @@
-﻿using FileNumRename.Control;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace FileNumRename
 {
@@ -36,8 +23,11 @@ namespace FileNumRename
                 case Key.Escape:
                     Application.Current.Shutdown();
                     break;
+                case Key.Enter:
+                    Item.Collection.ChangeFileName();
+                    break;
                 case Key.Up:
-                    if(Keyboard.Modifiers == ModifierKeys.Control)
+                    if (Keyboard.Modifiers == ModifierKeys.Control)
                     {
                         //  increase の値を最大値に
                         Item.Collection.ToMaxIncrease();
@@ -58,7 +48,7 @@ namespace FileNumRename
                     {
                         //  Increase の値を一つ下に
                         Item.Collection.UpdateIncrease(-1);
-                    }   
+                    }
                     break;
                 case Key.Left:
                     //  Cursor の値を一つ下げる (左に移動)

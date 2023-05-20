@@ -120,6 +120,33 @@ namespace FileNumRename.Lib
             UpdateIncrease(minDiffNum);
         }
 
+        public void ChangeFileName()
+        {
+            if(Increase == 0) { return; }
+
+            if (Increase > 0)
+            {
+                //  プラス方向への変更
+                List.OrderByDescending(x => x.NameNumbers[Cursor].Number).
+                    ToList().
+                    ForEach(x => x.ChangeFileName());
+            }
+            else if (Increase < 0)
+            {
+                //  マイナス方向への変更
+                List.OrderBy(x => x.NameNumbers[Cursor].Number).
+                    ToList().
+                    ForEach(x => x.ChangeFileName());
+            }
+
+            Increase = DEF_INCREASE;
+            List.ForEach(x =>
+            {
+                x.PreCheck(Cursor, DEF_INCREASE);
+                x.UpdateCursor();
+            });
+        }
+
         #region Inotify change
 
         public event PropertyChangedEventHandler PropertyChanged;

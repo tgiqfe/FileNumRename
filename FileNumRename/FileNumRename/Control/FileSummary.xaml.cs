@@ -1,5 +1,6 @@
 ﻿using FileNumRename.Lib;
 using FontAwesome6;
+using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,9 +27,9 @@ namespace FileNumRename.Control
     {
         public int Index { get; private set; }
 
-        public string FilePath { get; private set; }
-        public string FileName { get; private set; }
         public string ParentPath { get; private set; }
+        public string FileName { get; private set; }
+        public string FilePath { get { return Path.Combine(ParentPath, FileName); } }
         public NameNumber[] NameNumbers { get; private set; }
 
         public string NamePartsPre { get; private set; }
@@ -36,6 +37,15 @@ namespace FileNumRename.Control
         public string NumberSrc { get; private set; }
         public string NumberDst { get; private set; }
 
+        public string DestinationName
+        {
+            get { return NamePartsPre + NumberDst + NamePartsSuf; }
+        }
+        public string DestinationPath
+        {
+            get { return Path.Combine(ParentPath, NamePartsPre + NumberDst + NamePartsSuf) ; }
+        }
+        
         public EFontAwesomeIcon StatusIcon { get; set; }
         public string StatusText { get; set; }
 
@@ -43,11 +53,10 @@ namespace FileNumRename.Control
         public FileSummary(string path, int index)
         {
             Index = index + 1;
-            this.FilePath = path;
             this.FileName = Path.GetFileName(path);
             this.ParentPath = Path.GetDirectoryName(path);
             this.NameNumbers = NameNumber.Deploy(FileName);
-            
+
             InitializeComponent();
             this.DataContext = this;
         }
@@ -83,10 +92,8 @@ namespace FileNumRename.Control
 
         public void CheckStatus(string[] srcFilePaths)
         {
-            string dstFilePath = Path.Combine(ParentPath, NamePartsPre + NumberDst + NamePartsSuf);
-            
             //  ファイル名変更無しの場合
-            if(FilePath.Equals(dstFilePath, StringComparison.OrdinalIgnoreCase))
+            if (FilePath.Equals(DestinationPath, StringComparison.OrdinalIgnoreCase))
             {
                 StatusIcon = EFontAwesomeIcon.Regular_NoteSticky;
                 StatusText = "Not Change.";
@@ -94,9 +101,9 @@ namespace FileNumRename.Control
                 OnPropertyChanged(nameof(StatusText));
                 return;
             }
-            
+
             //  変更後のファイル名がすでに存在する場合
-            if (!srcFilePaths.Contains(dstFilePath) && File.Exists(dstFilePath))
+            if (!srcFilePaths.Contains(DestinationPath) && File.Exists(DestinationPath))
             {
                 StatusIcon = EFontAwesomeIcon.Solid_Xmark;
                 StatusText = "File already exists.";
@@ -110,6 +117,31 @@ namespace FileNumRename.Control
             StatusText = "Setting...";
             OnPropertyChanged(nameof(StatusIcon));
             OnPropertyChanged(nameof(StatusText));
+        }
+
+        public void ChangeFileName()
+        {
+            try
+            {
+                FileSystem.RenameFile(this.FilePath, DestinationName);
+
+                //  名前変更に成功
+                StatusIcon = EFontAwesomeIcon.Solid_SquareCheck;
+                StatusText = "Rename success.";
+                OnPropertyChanged(nameof(StatusIcon));
+                OnPropertyChanged(nameof(StatusText));
+
+                this.FileName = DestinationName;
+                this.NameNumbers = NameNumber.Deploy(FileName);
+            }
+            catch
+            {
+                //  名前変更に失敗
+                StatusIcon = EFontAwesomeIcon.Solid_Xmark;
+                StatusText = "Failed to rename.";
+                OnPropertyChanged(nameof(StatusIcon));
+                OnPropertyChanged(nameof(StatusText));
+            }
         }
 
         #region Inotify change
