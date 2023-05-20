@@ -36,7 +36,11 @@ namespace FileNumRename.Lib
             File.WriteAllText(HISTORY_FILE,
                 JsonSerializer.Serialize(
                     this,
-                    new JsonSerializerOptions() { WriteIndented = true }));
+                    new JsonSerializerOptions()
+                    {
+                        WriteIndented = true,
+                        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                    }));
         }
 
         public void ClearOldLog()
