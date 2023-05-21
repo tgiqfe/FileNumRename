@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -25,7 +26,8 @@ namespace FileNumRename.Lib
         {
             try
             {
-                return JsonSerializer.Deserialize<RenameHistory>(File.ReadAllText(HISTORY_FILE));
+                string historyFile = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName), HISTORY_FILE);
+                return JsonSerializer.Deserialize<RenameHistory>(File.ReadAllText(historyFile));
             }
             catch { }
             return new RenameHistory();
@@ -33,10 +35,15 @@ namespace FileNumRename.Lib
 
         public void Save()
         {
-            File.WriteAllText(HISTORY_FILE,
+            string historyFile = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName), HISTORY_FILE);
+            File.WriteAllText(historyFile,
                 JsonSerializer.Serialize(
                     this,
-                    new JsonSerializerOptions() { WriteIndented = true }));
+                    new JsonSerializerOptions()
+                    {
+                        WriteIndented = true,
+                        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                    }));
         }
 
         public void ClearOldLog()
