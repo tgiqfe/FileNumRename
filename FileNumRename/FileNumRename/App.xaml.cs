@@ -17,7 +17,20 @@ namespace FileNumRename
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            Item.Collection = new(e.Args);
+            List<string> paths = new();
+            foreach (var arg in e.Args)
+            {
+                if (arg.Contains(";"))
+                {
+                    paths.AddRange(arg.Split(';'));
+                }
+                else
+                {
+                    paths.Add(arg);
+                }
+            }
+
+            Item.Collection = new(paths.ToArray());
             Item.RenameHistory = RenameHistory.Load();
         }
 
