@@ -126,7 +126,7 @@ namespace FileNumRename.Lib
 
         public void ChangeFileName()
         {
-            if(Increase == 0) { return; }
+            if (Increase == 0) { return; }
 
             if (Increase > 0)
             {
